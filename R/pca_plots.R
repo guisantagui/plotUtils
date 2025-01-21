@@ -1,4 +1,3 @@
-
 #' Obtain the top contributing variables to two PCs
 #'
 #' Given a `prcomp` object and two PCs, gives the n top contributing variables
@@ -128,8 +127,8 @@ plotPCA <- function(PC,
 
         pcaPlt <- ggplot(dat, do.call(aes, aes_args)) +
                 geom_point(size = point_size) +
-                xlab(sprintf("PC1 (%s %%)", propX)) +
-                ylab(sprintf("PC1 (%s %%)", propY)) +
+                xlab(sprintf("%s (%s %%)", x, propX)) +
+                ylab(sprintf("%s (%s %%)", y, propY)) +
                 theme(title = ggtext::element_markdown(),
                       axis.title.y = ggtext::element_markdown(),
                       panel.background = element_blank(),

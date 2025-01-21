@@ -11,7 +11,7 @@
 #'
 #' @export
 read_table_fast <- function(f, row.names = NULL, sep = "auto", sep2 = "auto"){
-        df <- data.frame(data.table::fread(f, sep = sep, sep2 = sep2))
+        df <- data.frame(fread(f, sep = sep, sep2 = sep2))
         if (!is.null(row.names)){
                 rownames(df) <- df[, row.names]
                 df <- dfp[, -row.names]
@@ -53,16 +53,16 @@ write_table_fast <- function(df,
                              quote = "auto"){
         if(row.names){
                 rn <- rownames(df)
-                df <- data.table::data.table(df)
+                df <- data.table(df)
                 df[, V1 := rn]
-                data.table::setcolorder(df, c("V1", setdiff(names(df), "V1")))
+                setcolorder(df, c("V1", setdiff(names(df), "V1")))
         }else{
-                df <- data.table::data.table(df)
+                df <- data.table(df)
         }
-        data.table::fwrite(df,
-                           file,
-                           col.names = col.names,
-                           sep = sep,
-                           sep2 = sep2,
-                           quote = quote)
+        fwrite(df,
+               file,
+               col.names = col.names,
+               sep = sep,
+               sep2 = sep2,
+               quote = quote)
 }
