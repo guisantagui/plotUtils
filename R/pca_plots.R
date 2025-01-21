@@ -286,6 +286,6 @@ save_plot <- function(filename, plot, width = NA, height = NA){
         }
         ggsave(filename = filename,
                plot = plot,
-               width = with,
+               width = width,
                height = height)
 }
