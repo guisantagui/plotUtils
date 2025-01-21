@@ -281,7 +281,7 @@ save_plot <- function(filename, plot, width = NA, height = NA){
         if (class(plot)[1] != "gg"){
                 stop("Not a ggplot object", call. = F)
         }
-        if (dir.exists(dirname(filename)) != F){
+        if (!dir.exists(dirname(filename))){
                 stop("Given path doesn't exist", call. = F)
         }
         ggsave(filename = filename,
