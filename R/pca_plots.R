@@ -101,8 +101,8 @@ plotPCA <- function(PC,
                              call. = F)
                 }
                 dat <- cbind.data.frame(dat,
-                                        samp_info[match(dat$obsnames,
-                                                        samp_info$sample),
+                                        samp_info[match(make.names(dat$obsnames),
+                                                        make.names(samp_info$sample)),
                                                   colnames(samp_info) != "sample"])
                 if (!is.null(col)){
                         if (col %in% colnames(dat)){
