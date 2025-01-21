@@ -266,3 +266,26 @@ doPCAMultiPlot <- function(PC,
                               heights = c(rep(.8, nComps-2), 1))
         return(multPlot)
 }
+
+#' Save the plot
+#'
+#' Wrapper function of `ggsave`.
+#'
+#' @param filename The path to the file to save the plot
+#' @param plot A ggplot object
+#' @param width With of the plot
+#' @param height Height of the plot
+#'
+#' @export
+save_plot <- function(filename, plot, width = NA, height = NA){
+        if (class(plot)[1] != "gg"){
+                stop("Not a ggplot object", call. = F)
+        }
+        if (dir.exists(dirname(filename)) != F){
+                stop("Given path doesn't exist", call. = F)
+        }
+        ggsave(filename = filename,
+               plot = plot,
+               width = with,
+               height = height)
+}
