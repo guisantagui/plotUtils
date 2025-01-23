@@ -14,7 +14,7 @@ read_table_fast <- function(f, row.names = NULL, sep = "auto", sep2 = "auto"){
         df <- data.frame(fread(f, sep = sep, sep2 = sep2))
         if (!is.null(row.names)){
                 rownames(df) <- df[, row.names]
-                df <- dfp[, -row.names]
+                df <- df[, -row.names]
         }
         return(df)
 }
