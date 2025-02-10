@@ -59,6 +59,8 @@ quant_norm <- function(m, axis = 2, train_means = NULL) {
 #' column-wise (`2`, default) or row-wise (`1`).
 #' @param scale Logical. If data should be scaled (divided by sd).
 #' @param center Logical. If data should be centered (substract the mean).
+#'
+#' @export
 stand <- function(m, axis = 2, scale = T, center = T){
         m_class <- class(m)[1]
         if ((!m_class %in% c("data.frame", "matrix")) | any(dim(m) == 0)){
