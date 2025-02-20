@@ -93,22 +93,29 @@ plotPCA <- function(PC,
         dat <- dat[, c("obsnames", x, y)]
         if (!is.null(samp_info)){
                 if (class(samp_info) != "data.frame"){
-                        stop("sample_info must be a data.frame.",
+                        stop("samp_info must be a data.frame.",
                              call. = F)
                 }
                 if (!"sample" %in% colnames(samp_info)){
-                        stop("There is no 'sample' column in sample_info dataframe.",
+                        stop("There is no 'sample' column in samp_info dataframe.",
                              call. = F)
                 }
+		toBind <- samp_info[match(make.names(dat$obsnames),
+                                          make.names(samp_info$sample)),
+                                    colnames(samp_info) != "sample"]
+                toBind_cNames <- colnames(samp_info)[colnames(samp_info) != "sample"]
+                if(length(toBind_cNames) == 1){
+                        toBind <- data.frame(matrix(toBind, ncol = 1,
+                                                    dimnames = list(NULL,
+                                                                    toBind_cNames)))
+                }
                 dat <- cbind.data.frame(dat,
-                                        samp_info[match(make.names(dat$obsnames),
-                                                        make.names(samp_info$sample)),
-                                                  colnames(samp_info) != "sample"])
+                                        toBind)
                 if (!is.null(col)){
                         if (col %in% colnames(dat)){
                                 aes_args$col <- sym(col)
                         }else{
-                                stop(sprintf("%s not in sample_info", col),
+                                stop(sprintf("%s not in samp_info", col),
                                      call. = F)
                         }
                 }
@@ -116,7 +123,7 @@ plotPCA <- function(PC,
                         if (shape %in% colnames(dat)){
                                 aes_args$shape <- sym(shape)
                         }else{
-                                stop(sprintf("%s not in sample_info", shape),
+                                stop(sprintf("%s not in samp_info", shape),
                                      call. = F)
                         }
                 }
