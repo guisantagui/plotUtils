@@ -74,12 +74,20 @@ stand <- function(m, axis = 2, scale = T, center = T){
                 warning("No processing will be done", call. = F)
         }
         na_mask <- is.na(m)
-        if (any(na_mask)){
-                warning("The matrix contains NAs. They will be excluded during standardization.", call. = F)
-        }
         if (axis == 1){
                 m <- t(m)
                 na_mask <- t(na_mask)
+        }
+        if (any(na_mask)){
+                warning("The matrix contains NAs. They will be excluded during standardization.", call. = F)
+                not_valid_entries <- colSums(!na_mask) <= 1
+                if (any(not_valid_entries)){
+                        warning(sprintf("%s %s with one or less not NAs observations. Dropped from matrix.",
+                                        sum(not_valid_entries),
+                                        c("rows", "columns")[axis]))
+                }
+                m <- m[, !not_valid_entries]
+                na_mask <- na_mask[, !not_valid_entries]
         }
         format_m_mask <- function(m, na_mask, fun){
                 m_list <- m_lst <- apply(m, 2, fun)
@@ -98,7 +106,8 @@ stand <- function(m, axis = 2, scale = T, center = T){
         if (scale){
                 keep <- apply(m, 2, function(x) sd(x[!is.na(x)])) > 0
                 if (any(!keep)){
-                        warning(sprintf("There are %s with SD = 0. They will be removed.",
+                        warning(sprintf("%s %s with SD = 0. Dropped from matrix.",
+                                        sum(keep),
                                         c("rows", "columns")[axis]))
                 }
                 m <- m[, keep]
