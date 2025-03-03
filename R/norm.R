@@ -52,7 +52,8 @@ quant_norm <- function(m, axis = 2, train_means = NULL) {
 
 #' Standarize data
 #'
-#' Performs z-score standarization.
+#' Performs z-score standarization. Supports standarization when the input
+#' matrix cntains `NA`s, computing the standardized matrix excluding them.
 #'
 #' @param m A matrix or dataframe with the data to be normalized
 #' @param axis Numeric. `1` or `2`. If normalization will be performed
@@ -72,20 +73,38 @@ stand <- function(m, axis = 2, scale = T, center = T){
         if (!scale & !center){
                 warning("No processing will be done", call. = F)
         }
+        na_mask <- is.na(m)
+        if (any(na_mask)){
+                warning("The matrix contains NAs. They will be excluded during standardization.", call. = F)
+        }
         if (axis == 1){
                 m <- t(m)
+                na_mask <- t(na_mask)
+        }
+        format_mlist_mask <- function(m_list, na_mask){
+                m <- matrix(NA,
+                            nrow = nrow(na_mask),
+                            ncol = ncol(na_mask),
+                            dimnames = dimnames(na_mask))
+                m[!na_mask] <- unlist(m_list)
+                return(m)
         }
         if (center){
-                m <- apply(m, 2, function(x) x - mean(x))
+                #m <- apply(m, 2, function(x) x - mean(x))
+                m_lst <- apply(m, 2, function(x) x[!is.na(x)] - mean(x[!is.na(x)]))
+                m <- format_mlist_mask(m_lst, na_mask)
         }
         if (scale){
-                keep <- apply(m, 2, sd) > 0
+                keep <- apply(m, 2, function(x) sd(x[!is.na(x)])) > 0
                 if (any(!keep)){
                         warning(sprintf("There are %s with SD = 0. They will be removed.",
                                         c("rows", "columns")[axis]))
                 }
                 m <- m[, keep]
-                m <- apply(m, 2, function(x) x/sd(x))
+                na_mask <- na_mask[, keep]
+                #m <- apply(m, 2, function(x) x/sd(x))
+                m_lst <- apply(m, 2, function(x) x[!is.na(x)]/sd(x[!is.na(x)]))
+                m <- format_mlist_mask(m_lst, na_mask)
         }
         if (axis == 1){
                 m <- t(m)

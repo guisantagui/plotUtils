@@ -17,5 +17,6 @@ column-wise (\code{2}, default) or row-wise (\code{1}).}
 \item{center}{Logical. If data should be centered (substract the mean).}
 }
 \description{
-Performs z-score standarization.
+Performs z-score standarization. Supports standarization when the input
+matrix cntains \code{NA}s, computing the standardized matrix excluding them.
 }
