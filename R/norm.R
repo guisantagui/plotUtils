@@ -81,7 +81,8 @@ stand <- function(m, axis = 2, scale = T, center = T){
                 m <- t(m)
                 na_mask <- t(na_mask)
         }
-        format_mlist_mask <- function(m_list, na_mask){
+        format_m_mask <- function(m, na_mask, fun){
+                m_list <- m_lst <- apply(m, 2, fun)
                 m <- matrix(NA,
                             nrow = nrow(na_mask),
                             ncol = ncol(na_mask),
@@ -90,9 +91,9 @@ stand <- function(m, axis = 2, scale = T, center = T){
                 return(m)
         }
         if (center){
-                #m <- apply(m, 2, function(x) x - mean(x))
-                m_lst <- apply(m, 2, function(x) x[!is.na(x)] - mean(x[!is.na(x)]))
-                m <- format_mlist_mask(m_lst, na_mask)
+                m <- format_m_mask(m,
+                                   na_mask,
+                                   function(x) x[!is.na(x)] - mean(x[!is.na(x)]))
         }
         if (scale){
                 keep <- apply(m, 2, function(x) sd(x[!is.na(x)])) > 0
@@ -102,9 +103,9 @@ stand <- function(m, axis = 2, scale = T, center = T){
                 }
                 m <- m[, keep]
                 na_mask <- na_mask[, keep]
-                #m <- apply(m, 2, function(x) x/sd(x))
-                m_lst <- apply(m, 2, function(x) x[!is.na(x)]/sd(x[!is.na(x)]))
-                m <- format_mlist_mask(m_lst, na_mask)
+                m <- format_m_mask(m,
+                                   na_mask,
+                                   function(x) x[!is.na(x)]/sd(x[!is.na(x)]))
         }
         if (axis == 1){
                 m <- t(m)
