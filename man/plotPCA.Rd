@@ -11,7 +11,7 @@ plotPCA(
   samp_info = NULL,
   col = NULL,
   shape = NULL,
-  labs = F,
+  labs = NULL,
   biplot = F,
   topNFeats = NULL,
   fix_coord = T,
@@ -35,7 +35,9 @@ the points.
 #' @param shape A variable in \code{samp_info} dataframe which will be used to
 shape the points.}
 
-\item{labs}{Logical. If sample labels should be displayed in the plot.}
+\item{labs}{The samples whose labels should be displayed in the plot,
+introduced as a character vector. Defaults to no labels. If set to \code{"all"},
+all samples will be labeled.}
 
 \item{topNFeats}{Integer. Number of top contributing components to be
 displayed in the biplot. By default all features will be displayed.}

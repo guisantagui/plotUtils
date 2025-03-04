@@ -53,7 +53,7 @@ quant_norm <- function(m, axis = 2, train_means = NULL) {
 #' Standarize data
 #'
 #' Performs z-score standarization. Supports standarization when the input
-#' matrix cntains `NA`s, computing the standardized matrix excluding them.
+#' matrix cntains `NA`s, computing the standardized matrix by excluding them.
 #'
 #' @param m A matrix or dataframe with the data to be normalized
 #' @param axis Numeric. `1` or `2`. If normalization will be performed

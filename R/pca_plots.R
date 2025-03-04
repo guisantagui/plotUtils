@@ -52,7 +52,9 @@ getTopContrib <- function(PC, topN = 12, x = "PC1", y = "PC2"){
 #' the points.
 #' #' @param shape A variable in `samp_info` dataframe which will be used to
 #' shape the points.
-#' @param labs Logical. If sample labels should be displayed in the plot.
+#' @param labs The samples whose labels should be displayed in the plot,
+#' introduced as a character vector. Defaults to no labels. If set to `"all"`,
+#' all samples will be labeled.
 #' @param topNFeats Integer. Number of top contributing components to be
 #' displayed in the biplot. By default all features will be displayed.
 #' @param fix_coord Logical. If fixed coordinate scale of units in both axes
@@ -68,7 +70,7 @@ plotPCA <- function(PC,
                     samp_info = NULL,
                     col = NULL,
                     shape = NULL,
-                    labs = F,
+                    labs = NULL,
                     biplot = F,
                     topNFeats = NULL,
                     fix_coord = T,
@@ -100,7 +102,7 @@ plotPCA <- function(PC,
                         stop("There is no 'sample' column in samp_info dataframe.",
                              call. = F)
                 }
-		toBind <- samp_info[match(make.names(dat$obsnames),
+                toBind <- samp_info[match(make.names(dat$obsnames),
                                           make.names(samp_info$sample)),
                                     colnames(samp_info) != "sample"]
                 toBind_cNames <- colnames(samp_info)[colnames(samp_info) != "sample"]
@@ -147,9 +149,30 @@ plotPCA <- function(PC,
                 pcaPlt <- pcaPlt +
                         coord_fixed()
         }
-        if (labs){
+        if (!is.null(labs)){
+                if(length(labs) > 1){
+                        if (class(labs) != "character"){
+                                stop("labs needs to be a character variable or vector",
+                                     call. = F)
+                        }
+                        if (any(!labs %in% dat$obsnames)){
+                                warning(sprintf("There are %s labels that don't appear in the data, and won't be plotted.",
+                                                sum(!labs %in% dat$obsnames)))
+                        }
+                        label_dat <- dat[dat$obsnames %in% labs, ]
+                }else{
+                        if (labs != "all"){
+                                if (!labs %in% dat$obsnames){
+                                        warning("%s doesn't appear in the data, so this label won't be plotted.",
+                                                labs)
+                                }
+                                label_dat <- dat[dat$obsnames %in% labs, ]
+                        }else{
+                                label_dat <- dat
+                        }
+                }
                 pcaPlt <- pcaPlt +
-                        geom_text_repel()
+                        geom_text_repel(data = label_dat)
         }
         if (!is.null(topNFeats) & !biplot){
                 warning("topNFeats is not NULL but biplot is FALSE. To show top N contributing features in the plot set biplot to TRUE.")
