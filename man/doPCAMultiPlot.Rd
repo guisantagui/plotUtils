@@ -10,7 +10,7 @@ doPCAMultiPlot(
   samp_info = NULL,
   col = NULL,
   shape = NULL,
-  labs = F,
+  labs = NULL,
   topNFeats = NULL,
   biplot = F,
   point_size = 3
