@@ -60,7 +60,7 @@ write_table_fast <- function(df,
                 df <- data.table(df)
         }
         fwrite(df,
-               file,
+               f,
                col.names = col.names,
                sep = sep,
                sep2 = sep2,
